@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unlock the Dorm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Bright, Professional Light Theme Background */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            color: #334155;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            box-sizing: border-box;
+        }
+
+        /* Clean White Container with Soft Shadows */
+        .container {
+            background: #ffffff;
+            padding: 45px 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 0;
+            font-size: 2.2em;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 35px;
+            font-size: 1.05em;
+        }
+
+        /* Professional Card-Style Questions */
+        .question {
+            margin-bottom: 20px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .question:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .question label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 12px;
+            color: #1e293b;
+            font-size: 1.05em;
+        }
+
+        /* Clean Styled Inputs */
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            box-sizing: border-box;
+            background: #ffffff;
+            border: 2px solid #cbd5e1;
+            color: #0f172a;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1em;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]::placeholder {
+            color: #94a3b8;
+        }
+
+        input[type="text"]:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        }
+
+        /* Vibrant Call-to-Action Button */
+        button {
+            width: 100%;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 1.15em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            border-radius: 12px;
+            margin-top: 25px;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* Result Box */
+        #result {
+            margin-top: 30px;
+            font-size: 1.2em;
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+            font-weight: 500;
+        }
+
+        #result strong {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.5em;
+            letter-spacing: 3px;
+            background: #ffffff;
+            color: #0f172a;
+            padding: 6px 16px;
+            border-radius: 6px;
+            margin-left: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .locked {
+            background-color: #fef2f2;
+            color: #ef4444;
+            border: 2px solid #fecaca;
+        }
+
+        .unlocked {
+            background-color: #f0fdf4;
+            color: #16a34a;
+            border: 2px solid #bbf7d0;
+        }
+
+        /* Error Animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+
+        .shake {
+            animation: shake 0.4s ease-in-out;
+            border-color: #ef4444 !important;
+            background: #fef2f2 !important;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🚪 Dorm Room Lock</h2>
+        <p>Complete the security check. Enter the correct 10 overrides to reveal the passcode.</p>
+        
+        <div id="quiz">
+            <div class="question">
+                <label>1. What color is a clear sky during the day?</label>
+                <input type="text" id="q1" data-answer="blue" placeholder="Enter answer here">
+            </div>
+            
+            <div class="question">
+                <label>2. What is 5 + 5?</label>
+                <input type="text" id="q2" data-answer="10" placeholder="Enter answer here">
+            </div>
+
+            <div class="question">
+                <label>3. What animal goes 'meow'?</label>
+                <input type="text" id="q3" data-answer="cat" placeholder="Enter answer here">
+            </div>
+
+            <div class="question">
+                <label>4. How many days are in a standard week?</label>
+                <input type="text" id="q4" data-answer="7" placeholder="Enter answer here">
+            </div>
+
+            <div class="question">
+                <label>5. What is the opposite of hot?</label>
+                <input type="text" id="q5" data-answer="cold" placeholder="Enter answer here">
+            </div>
+
+            <div class="question">
+                <label>6. Which planet is known as the Red Planet?</label>
+                <input type="text" id="q6" data-answer="mars" placeholder="Enter answer here">
+            </div>
+
+            <div class="question">
+                <label>7. What do bees make?</label>
+                <input type="text" id="q7" data-answer="honey" placeholder="Enter answer here">
+            </div>
+
+            <div class="question">
+                <label>8. What is the freezing point of water in Celsius?</label>
+                <input type="text" id="q8" data-answer="0" placeholder="Enter answer here">
+            </div>
+
+            <div class="question">
+                <label>9. What comes after the letter 'A'?</label>
+                <input type="text" id="q9" data-answer="b" placeholder="Enter answer here">
+            </div>
+
+            <div class="question">
+                <label>10. What is a baby dog called?</label>
+                <input type="text" id="q10" data-answer="puppy" placeholder="Enter answer here">
+            </div>
+        </div>
+
+        <button onclick="checkAnswers()">Verify & Unlock</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function checkAnswers() {
+            let allCorrect = true;
+            let totalQuestions = 10;
+
+            for(let i = 1; i <= totalQuestions; i++) {
+                let inputElement = document.getElementById('q' + i);
+                
+                // Reset animation and styling
+                inputElement.classList.remove('shake');
+                inputElement.style.borderColor = "#cbd5e1";
+                inputElement.style.background = "#ffffff";
+                
+                let userAnswer = inputElement.value.trim().toLowerCase();
+                let correctAnswer = inputElement.getAttribute('data-answer').toLowerCase();
+
+                if(userAnswer !== correctAnswer) {
+                    allCorrect = false;
+                    // Force reflow to allow animation to replay if they get it wrong twice
+                    void inputElement.offsetWidth;
+                    // Add shake class for wrong answers
+                    inputElement.classList.add('shake');
+                } else {
+                    inputElement.style.borderColor = "#22c55e"; // Green border for correct
+                    inputElement.style.background = "#f0fdf4"; // Very light green background
+                }
+            }
+
+            let resultDiv = document.getElementById('result');
+            resultDiv.style.display = "block";
+
+            if(allCorrect) {
+                // Change the '4928' below to whatever code you want to give the players
+                resultDiv.innerHTML = "🔓 SYSTEM OVERRIDE SUCCESSFUL. KEYPAD CODE: <strong>4928</strong>";
+                resultDiv.className = "unlocked";
+            } else {
+                resultDiv.innerHTML = "🔒 ACCESS DENIED. Incorrect inputs detected.";
+                resultDiv.className = "locked";
+            }
+        }
+    </script>
+</body>
+</html>
