@@ -183,57 +183,7 @@
         <h2>🚪 Dorm Room Lock</h2>
         <p>Complete the security check. Enter the correct 10 overrides to reveal the passcode.</p>
         
-        <div id="quiz">
-            <div class="question">
-                <label>1. I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?</label>
-                <input type="text" id="q1" data-answer="echo" placeholder="Enter answer here">
-            </div>
-            
-            <div class="question">
-                <label>2. I have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?</label>
-                <input type="text" id="q2" data-answer="map" placeholder="Enter answer here">
-            </div>
-
-            <div class="question">
-                <label>3. What has keys but can't open locks?</label>
-                <input type="text" id="q3" data-answer="piano" placeholder="Enter answer here">
-            </div>
-
-            <div class="question">
-                <label>4. What belongs to you, but other people use it more than you do?</label>
-                <input type="text" id="q4" data-answer="name" placeholder="Enter answer here">
-            </div>
-
-            <div class="question">
-                <label>5. The more of this there is, the less you see. What is it?</label>
-                <input type="text" id="q5" data-answer="darkness" placeholder="Enter answer here">
-            </div>
-
-            <div class="question">
-                <label>6. I am tall when I'm young, and I'm short when I'm old. What am I?</label>
-                <input type="text" id="q6" data-answer="candle" placeholder="Enter answer here">
-            </div>
-
-            <div class="question">
-                <label>7. What has a head, a tail, is brown, and has no legs?</label>
-                <input type="text" id="q7" data-answer="penny" placeholder="Enter answer here">
-            </div>
-
-            <div class="question">
-                <label>8. What comes once in a minute, twice in a moment, but never in a thousand years?</label>
-                <input type="text" id="q8" data-answer="m" placeholder="Enter answer here">
-            </div>
-
-            <div class="question">
-                <label>9. If you drop me I'm sure to crack, but give me a smile and I'll always smile back. What am I?</label>
-                <input type="text" id="q9" data-answer="mirror" placeholder="Enter answer here">
-            </div>
-
-            <div class="question">
-                <label>10. I have branches, but no fruit, trunk or leaves. What am I?</label>
-                <input type="text" id="q10" data-answer="bank" placeholder="Enter answer here">
-            </div>
-        </div>
+        <div id="quiz"></div>
 
         <button onclick="checkAnswers()">Verify & Unlock</button>
         
@@ -241,6 +191,59 @@
     </div>
 
     <script>
+        // Array of 20 possible riddles
+        const riddlePool = [
+            { q: "I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?", a: "echo" },
+            { q: "I have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?", a: "map" },
+            { q: "What has keys but can't open locks?", a: "piano" },
+            { q: "What belongs to you, but other people use it more than you do?", a: "name" },
+            { q: "The more of this there is, the less you see. What is it?", a: "darkness" },
+            { q: "I am tall when I'm young, and I'm short when I'm old. What am I?", a: "candle" },
+            { q: "What has a head, a tail, is brown, and has no legs?", a: "penny" },
+            { q: "What comes once in a minute, twice in a moment, but never in a thousand years?", a: "m" },
+            { q: "If you drop me I'm sure to crack, but give me a smile and I'll always smile back. What am I?", a: "mirror" },
+            { q: "I have branches, but no fruit, trunk or leaves. What am I?", a: "bank" },
+            { q: "What has to be broken before you can use it?", a: "egg" },
+            { q: "What is full of holes but still holds water?", a: "sponge" },
+            { q: "What gets wet while drying?", a: "towel" },
+            { q: "What can you keep after giving to someone?", a: "word" },
+            { q: "I shave every day, but my beard stays the same. What am I?", a: "barber" },
+            { q: "What goes up but never comes down?", a: "age" },
+            { q: "What gets bigger the more you take away?", a: "hole" },
+            { q: "I have hands but cannot clap. What am I?", a: "clock" },
+            { q: "What has a neck but no head?", a: "bottle" },
+            { q: "What has an eye but cannot see?", a: "needle" }
+        ];
+
+        // Shuffle function (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            let shuffled = array.slice(); 
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        // Initialize quiz on page load
+        window.onload = function() {
+            // Pick 10 random riddles from the pool
+            const selectedRiddles = shuffleArray(riddlePool).slice(0, 10);
+            const quizContainer = document.getElementById('quiz');
+            
+            // Build the HTML for the 10 questions
+            selectedRiddles.forEach((riddle, index) => {
+                const qNum = index + 1;
+                const questionHTML = `
+                    <div class="question">
+                        <label>${qNum}. ${riddle.q}</label>
+                        <input type="text" id="q${qNum}" data-answer="${riddle.a}" placeholder="Enter answer here">
+                    </div>
+                `;
+                quizContainer.innerHTML += questionHTML;
+            });
+        };
+
         function checkAnswers() {
             let allCorrect = true;
             let totalQuestions = 10;
