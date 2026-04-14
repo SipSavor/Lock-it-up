@@ -94,6 +94,19 @@
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
         }
 
+        /* Real-time Validation Classes */
+        .input-correct {
+            border-color: #22c55e !important;
+            background: #f0fdf4 !important;
+            color: #166534 !important;
+        }
+
+        .input-incorrect {
+            border-color: #ef4444 !important;
+            background: #fef2f2 !important;
+            color: #991b1b !important;
+        }
+
         /* Vibrant Call-to-Action Button */
         button {
             width: 100%;
@@ -167,8 +180,6 @@
 
         .shake {
             animation: shake 0.4s ease-in-out;
-            border-color: #ef4444 !important;
-            background: #fef2f2 !important;
         }
 
         @keyframes fadeIn {
@@ -232,18 +243,37 @@
             const quizContainer = document.getElementById('quiz');
             
             // Build the HTML for the 10 questions
+            // Notice the new oninput="checkSingleAnswer(this)" added to the input tag
             selectedRiddles.forEach((riddle, index) => {
                 const qNum = index + 1;
                 const questionHTML = `
                     <div class="question">
                         <label>${qNum}. ${riddle.q}</label>
-                        <input type="text" id="q${qNum}" data-answer="${riddle.a}" placeholder="Enter answer here">
+                        <input type="text" id="q${qNum}" data-answer="${riddle.a}" placeholder="Enter answer here" oninput="checkSingleAnswer(this)">
                     </div>
                 `;
                 quizContainer.innerHTML += questionHTML;
             });
         };
 
+        // Real-time checking function
+        function checkSingleAnswer(inputElement) {
+            let userAnswer = inputElement.value.trim().toLowerCase();
+            let correctAnswer = inputElement.getAttribute('data-answer').toLowerCase();
+
+            // Clear previous states
+            inputElement.classList.remove('input-correct', 'input-incorrect', 'shake');
+
+            if (userAnswer === "") {
+                // Do nothing if the field is empty
+            } else if (userAnswer === correctAnswer) {
+                inputElement.classList.add('input-correct');
+            } else {
+                inputElement.classList.add('input-incorrect');
+            }
+        }
+
+        // Final verification function for the button
         function checkAnswers() {
             let allCorrect = true;
             let totalQuestions = 10;
@@ -251,24 +281,20 @@
             for(let i = 1; i <= totalQuestions; i++) {
                 let inputElement = document.getElementById('q' + i);
                 
-                // Reset animation and styling
+                // Reset shake animation
                 inputElement.classList.remove('shake');
-                inputElement.style.borderColor = "#cbd5e1";
-                inputElement.style.background = "#ffffff";
                 
                 let userAnswer = inputElement.value.trim().toLowerCase();
                 let correctAnswer = inputElement.getAttribute('data-answer').toLowerCase();
 
                 if(userAnswer !== correctAnswer) {
                     allCorrect = false;
-                    // Force reflow to allow animation to replay if they get it wrong twice
+                    // Force reflow to allow animation to replay if they get it wrong multiple times
                     void inputElement.offsetWidth;
                     // Add shake class for wrong answers
                     inputElement.classList.add('shake');
-                } else {
-                    inputElement.style.borderColor = "#22c55e"; // Green border for correct
-                    inputElement.style.background = "#f0fdf4"; // Very light green background
-                }
+                    inputElement.classList.add('input-incorrect'); // ensure it's red if they hit verify while empty
+                } 
             }
 
             let resultDiv = document.getElementById('result');
